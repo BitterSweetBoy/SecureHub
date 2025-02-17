@@ -3,3 +3,12 @@
 @use './assets/layout/layout.scss';
 @use 'primeicons/primeicons.css';
 @use './assets/demo/demo.scss';  
+
+.login-mode {
+    background-color: white;
+    min-height: 100vh;
+  }
+  
+  .app-mode {
+    background-color: var(--app-background-color);
+  }
