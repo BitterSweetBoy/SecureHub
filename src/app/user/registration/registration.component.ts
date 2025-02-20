@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule,FormBuilder, FormGroup, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
 import { FirstKeyPipe } from '../../Shared/pipes/first-key.pipe';
 import { AuthService } from '../../Shared/services/auth.service';
@@ -7,22 +7,24 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { MessageModule } from 'primeng/message';
 import { finalize } from 'rxjs/operators';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-registration',
-  imports: [ReactiveFormsModule, CommonModule, FirstKeyPipe, ToastModule, MessageModule],
+  imports: [ReactiveFormsModule, CommonModule, FirstKeyPipe, ToastModule, MessageModule, RouterLink],
   templateUrl: './registration.component.html',
   styleUrl: './registration.component.scss',
   providers: [MessageService]
 })
-export class RegistrationComponent {
+export class RegistrationComponent implements OnInit {
   form: FormGroup;
   isSubmitted:boolean = false;
 
   constructor(
     public formBuilder: FormBuilder,
     private authService: AuthService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private router:Router,
   ) {
     this.form = this.formBuilder.group({
       fullName: ['', Validators.required],
@@ -34,6 +36,12 @@ export class RegistrationComponent {
       ]],
       confirmPassword: [''],
     }, { validators: this.passwordMatch });  
+  }
+
+  ngOnInit(): void {
+    if(this.authService.isLoggedIn()){
+      this.router.navigateByUrl('dashboard');
+    }
   }
   
   onSubmit() {
